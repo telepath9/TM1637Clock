@@ -5,11 +5,12 @@
 #include "TM1637Display.h"
 
 /*LIBRERIE USATE:
-modulo RTC: https://github.com/adafruit/RTClib
+RTC module: https://github.com/adafruit/RTClib
 NTP client: https://github.com/arduino-libraries/NTPClient/tree/master
 display: https://github.com/avishorp/TM1637/blob/master/TM1637Display.h
 */
-  //wemos d1 mini
+
+  //wemos d1 mini (clone)
 
 //TM1637 DISPLAY SETUP
 #define CLK 13
@@ -26,17 +27,12 @@ display: https://github.com/avishorp/TM1637/blob/master/TM1637Display.h
 
   WiFiUDP ntpUDP;
 
-
- 
-
-
 // You can specify the time server pool and the offset, (in seconds)
 // additionally you can specify the update interval (in milliseconds).
 // NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 3600, 60000);
 
 //specifico il time server pool e l'offset in secondi (3600=1h) 
   NTPClient timeClient(ntpUDP, "ntp1.inrim.it", 3600);
-
 
   RTC_DS1307 rtc;
 
@@ -55,7 +51,7 @@ void setup() {
       }
     
     timeClient.begin();
-//FINE SETUP NTP
+//END SETUP NTP
 
   //estraggo HH , MM, SS da timeClient.getFormattedTime()
   /*timeClient.getHours() e timeClient.getMinutes()
@@ -83,7 +79,7 @@ void setup() {
     // January 21, 2014 at 3am you would call:
     // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
 
-    //PS: __DATE__ e __TIME__ sono macros che sets the RTC to the date & time this sketch was compiled
+    //PS: __DATE__ e __TIME__ are macros that sets the RTC to the date & time this sketch was compiled
   }
 
 }
@@ -94,21 +90,8 @@ void loop() {
 
   DateTime adesso = rtc.now();
   timeClient.update(); //obbligatoria
-  
-
-  /*Serial.print("NTP says ->");
-  Serial.print(timeClient.getHours(), DEC);
-  Serial.print('-');
-  Serial.print(timeClient.getMinutes());
-  Serial.print('-');
-  Serial.println(timeClient.getSeconds());*/
-  
-  rtc.adjust(DateTime(2025, 3, 15, timeClient.getHours(), timeClient.getMinutes(), timeClient.getSeconds()));
-
-  //posso anche spegnere il wifi
-
  
-
+  rtc.adjust(DateTime(2025, 3, 15, timeClient.getHours(), timeClient.getMinutes(), timeClient.getSeconds()));
   //Serial.println(timeClient.getFormattedTime());
 
   mydisplay.showNumberDecEx(adesso.hour(), 0b01000000, false, 2, 0);
