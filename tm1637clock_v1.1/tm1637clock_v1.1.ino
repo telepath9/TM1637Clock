@@ -11,7 +11,7 @@ NTP client: https://github.com/arduino-libraries/NTPClient/tree/master
 display: https://github.com/avishorp/TM1637/blob/master/TM1637Display.h
 */
 
-  //wemos d1 mini (clone)
+//wemos d1 mini (clone)
 
 //TM1637 DISPLAY SETUP
 #define CLK 13
@@ -26,7 +26,8 @@ display: https://github.com/avishorp/TM1637/blob/master/TM1637Display.h
   const char *ssid     = "your_ssid";
   const char *password = "your_password";
 
-  WiFiUDP ntpUDP;
+
+  WiFiUDP ntpUDP;  //NTP server uses UDP communication protocol
 
 // You can specify the time server pool and the offset, (in seconds, es:(3600=1h))
 // additionally you can specify the update interval (in milliseconds).
@@ -35,13 +36,14 @@ display: https://github.com/avishorp/TM1637/blob/master/TM1637Display.h
   RTC_DS1307 rtc;
 
 void setup() {
-
     
-    mydisplay.setBrightness(7);
+    Serial.begin(115200);
+  
+    mydisplay.setBrightness(7); //display brightness
+  
     pinMode(14, INPUT_PULLUP);
 
-    Serial.begin(115200);
-
+    
 //SETUP NTP
     WiFi.begin(ssid, password);
 
@@ -56,14 +58,14 @@ void setup() {
 
            //counter for waiting animation
            for(int ct=3; ct>=0; ct--){
-           delay (100);
+           delay (100);      //next change to do: replace delay() with a non-blocking wait
            mydisplay.showNumberDecEx(0, 0, false, 1, ct);
            delay (100);
            
            Serial.println( "Trying to connect. Press button 2 skip 2 RTC" );
 
-                //if button is pressed
-              if(digitalRead(14) == LOW){  //forse è meglio usare gli INTERRUPT
+              //when button is pressed, skips directly to RTC MODE
+              if(digitalRead(14) == LOW){  
                   break;
               }
            }
@@ -86,7 +88,7 @@ void setup() {
     while (1) delay(10);
   }
 
-  //checks if rtc hasn't data in it yet
+  //checks if RTC hasn't data in it yet
   if (!rtc.isrunning()) {
     Serial.println("RTC is NOT running, let's set the time!");
 
@@ -95,14 +97,8 @@ void setup() {
     // January 21, 2014 at 3am you would call:
     // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
     rtc.adjust(DateTime(2025, 3, 20, timeClient.getHours(), timeClient.getMinutes(), timeClient.getSeconds()));
-
-
-   
-
     //PS: __DATE__ e __TIME__ are macros that sets the RTC to the date & time this sketch was compiled
   }
-
-  
 
 }
 
@@ -111,23 +107,17 @@ void setup() {
 
 void loop() {
 
-  
+  //NTP Mode
   if(WiFi.status() == WL_CONNECTED){
-  
-  
-  
   
   timeClient.update(); //mandatory
  
-
   mydisplay.showNumberDecEx(timeClient.getHours(), 0b01000000, true, 2, 0);
   mydisplay.showNumberDecEx(timeClient.getMinutes(), 0b01000000, true, 2, 2);
   }
-  
 
-  
-  
-  //Serial.print("RTC MODE");
+    
+  //RTC Mode (when there's no wifi)
   else{
   DateTime adesso = rtc.now();
  
@@ -135,7 +125,6 @@ void loop() {
   mydisplay.showNumberDecEx(adesso.minute(), 0b01000000, true, 2, 2);
      }
   
-
 
 }
 
