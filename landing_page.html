@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<!--control+c+shift = html inspector with mouse-->
+<title>ESP8266 Clock</title>
+<!--<meta> tag makes your web page responsive in any browser (laptop, tablet or smartphone)-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:,">
+<style>
+
+body{background-color: #184E77;
+font-family: Consolas;}
+
+.grid-container{
+    width:400px; height:220px;
+    margin:auto;
+    display:grid;
+  
+    grid-template-columns: 100px 200px 100px;
+    /* grid-template-rows: 100px 220px 100px;*/
+}
+
+
+.internal {
+ /*il div che contiene il div "container", che contiene
+ gli input fields,checkbox, ecc...*/
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+</style>
+</head>
+
+<body>
+<h2 style="color:white; text-align:center;">ESP8266 Clock WiFi Setup</h2>
+
+
+<div class="outer" >
+    <form action="<!--insert action-->"  target=""  method="post">
+	<fieldset style="width:400px; margin:auto; text-align: center; border-radius: 10px; border: 2px solid white; background-color:#2A9D8F; ">
+      <legend style="color:#D9ED92;  padding: 8px; background-color:#184E77; border: 2px solid white; border-radius: 4px; float:center;"><b>Enter your Wifi Credentials</b></legend>
+     
+
+<div class="grid-container" style="border:10px slateblue; ">
+
+    
+    <div >
+    </div>
+
+
+    <div class="internal">
+    <div class="container" >
+        
+         <label  style="color: white; float: left;" for="ssid" ><b>SSID</b></label><br>
+         <input type="text" id="ssid"  placeholder="SSID" name="ssid" style="width:180px; border-radius: 4px;"><br><br>
+         
+         <label style="color: white;  ; float:left;" for="pw"><b>Password</b></label><br>
+         <input type="password" placeholder="Password" id="pw" name="pw" style="width:180px;border-radius: 4px; "><br>
+          
+         
+         <input style="float: left; " type="checkbox" id="show_pw" name="show_pw" value="False" >
+		 <label style="float: left;" for="show_pw"><b>Show Password</b></label><br><br>
+
+		 <input type="submit" id="connect" value="Connect" style="width:75px; border-radius: 4px;">
+
+
+    </div>
+    </div>
+
+    <div>
+    </div>
+    
+
+
+
+</div>
+</div>
+
+<pre> 
+<code>
+<!-- per mostrare la pw tramite check/uncheck di checkbox, 
+ devi usare jquery (è una libreria di JS??)-->
+
+</code>
+</pre>
+
+<script>
+
+    let password = document.getElementById("pw");
+    let checkbox = document.getElementById("show_pw");
+
+    checkbox.onclick = function(){
+        if (checkbox.checked) {
+            password.type = "text";
+        }
+
+        else{
+            password.type = "password";
+        }
+    }
+
+
+    let connect= document.getElementById("go");
+
+    connect.onclick= function(){
+
+        /*questa funzione dovrà passare le credenziali
+        ad esp8266 in modo da connettersi al wifi*/
+
+
+    }
+</script>
+
+</body>
+</html>
